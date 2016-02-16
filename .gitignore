@@ -1,0 +1,8 @@
+#node-lambda config
+.env
+deploy.env
+#event.json
+
+config.js
+
+node_modules

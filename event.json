@@ -1,0 +1,13 @@
+{
+  "html": "<h1>Hello World</h1>",
+  "margins": {
+      "top": 10,
+      "right": 10,
+      "bottom": 40,
+      "left": 10
+  },
+  "header": {
+      "html": "<h3>MyHeader</h3>",
+      "spacing": 25
+  }
+}
