@@ -14,7 +14,15 @@ exports.handler = function(event, context) {
 
 		writeStream = fs.createWriteStream(output);
 
-		wkhtmltopdf(event.html, function(code, signal) {
+    var options = {
+      marginTop: event.margins.top || 20,
+      marginRight: event.margins.right || 20,
+      marginBottom: event.margins.bottom || 20,
+      marginLeft: event.margins.left || 20
+    };
+
+
+		wkhtmltopdf(event.html, options, function(code, signal) {
 
 			s3.putObject({
 				Bucket : dstBucket,
