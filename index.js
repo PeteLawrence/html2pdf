@@ -8,12 +8,12 @@ process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'
 
 exports.handler = function(event, context) {
   console.log(config);
-	return_data = {};
-	if (event.html) {
-		var output_filename = 'report_' + Math.random().toString(36).slice(2) + '.pdf';
-		var output = '/tmp/' + output_filename;
+  return_data = {};
+  if (event.html) {
+    var output_filename = 'report_' + Math.random().toString(36).slice(2) + '.pdf';
+    var output = '/tmp/' + output_filename;
 
-		writeStream = fs.createWriteStream(output);
+    writeStream = fs.createWriteStream(output);
 
 
     //Write the header to a file for wkhtmltopdf to use
@@ -34,31 +34,31 @@ exports.handler = function(event, context) {
       footerHtml: '/tmp/footer.html',
     };
 
-		wkhtmltopdf(event.html, options, function(code, signal) {
+    wkhtmltopdf(event.html, options, function(code, signal) {
 
-			s3.putObject({
-				Bucket : config.bucket,
-				Key : output_filename,
-				Body : fs.createReadStream(output),
-				ContentType : "application/pdf"
-			}, function(error, data) {
+      s3.putObject({
+        Bucket : config.bucket,
+        Key : output_filename,
+        Body : fs.createReadStream(output),
+        ContentType : "application/pdf"
+      }, function(error, data) {
 
-				if (error != null) {
-					console.log("error: " + error);
-				} else {
-					console.log('upload done...');
-				}
-				return_data = {
-					filename : output_filename
-				};
-				// context.succeed("File has been uploaded");
-				context.done(null, return_data);
-			});
+        if (error != null) {
+          console.log("error: " + error);
+        } else {
+          console.log('upload done...');
+        }
+        return_data = {
+          filename : output_filename
+        };
+        // context.succeed("File has been uploaded");
+        context.done(null, return_data);
+      });
 
-		}).pipe(writeStream);
-	} else {
-		console.log('error');
-		context.done('unable to get the html', {});
-	}
+    }).pipe(writeStream);
+  } else {
+    console.log('error');
+    context.done('unable to get the html', {});
+  }
 
 };
