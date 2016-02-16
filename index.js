@@ -1,15 +1,16 @@
 var wkhtmltopdf = require('wkhtmltopdf');
 var fs = require('fs');
 var AWS = require('aws-sdk');
+var s3 = new AWS.S3();
 var config = require('./config.js');
 
-var s3 = new AWS.S3();
+process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'];
 
 exports.handler = function(event, context) {
+  console.log(config);
 	return_data = {};
 	if (event.html) {
-
-		var output_filename = Math.random().toString(36).slice(2) + '.pdf';
+		var output_filename = 'report_' + Math.random().toString(36).slice(2) + '.pdf';
 		var output = '/tmp/' + output_filename;
 
 		writeStream = fs.createWriteStream(output);
@@ -36,7 +37,7 @@ exports.handler = function(event, context) {
 		wkhtmltopdf(event.html, options, function(code, signal) {
 
 			s3.putObject({
-				Bucket : dstBucket,
+				Bucket : config.bucket,
 				Key : output_filename,
 				Body : fs.createReadStream(output),
 				ContentType : "application/pdf"
@@ -50,7 +51,6 @@ exports.handler = function(event, context) {
 				return_data = {
 					filename : output_filename
 				};
-        console.log(return_data);
 				// context.succeed("File has been uploaded");
 				context.done(null, return_data);
 			});
