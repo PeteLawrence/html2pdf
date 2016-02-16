@@ -1,13 +1,17 @@
 {
-  "html": "<h1>Hello World</h1>",
+  "html": "<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'><style>body { font-family: 'Lato', sans-serif; }</style><h1>Hello World</h1><p>Nullam quis risus eget urna mollis ornare vel eu leo. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Curabitur blandit tempus porttitor. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>",
   "margins": {
-      "top": 10,
+      "top": 20,
       "right": 10,
-      "bottom": 40,
+      "bottom": 10,
       "left": 10
   },
   "header": {
-      "html": "<h3>MyHeader</h3>",
-      "spacing": 25
+      "html": "Here is my header that is pretty long",
+      "spacing": 10
+  },
+  "footer": {
+      "html": "Here is a footer that will appear on every page",
+      "spacing": 10
   }
 }

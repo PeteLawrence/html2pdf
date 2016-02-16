@@ -14,13 +14,24 @@ exports.handler = function(event, context) {
 
 		writeStream = fs.createWriteStream(output);
 
+
+    //Write the header to a file for wkhtmltopdf to use
+    var headerHtml = "<body style='height:50px;overflow:hidden;margin:0;padding:0;'>" + event.header.html + "</body>";
+    fs.writeFile('/tmp/header.html', "<!DOCTYPE html>\n" + headerHtml);
+
+    //Write the footer to a file for wkhtmltopdf to use
+    var footerHtml = "<body style='height:50px;overflow:hidden;margin:0;padding:0;'>" + event.footer.html + "</body>";
+    fs.writeFile('/tmp/footer.html', "<!DOCTYPE html>\n" + footerHtml);
+
     var options = {
       marginTop: event.margins.top || 20,
       marginRight: event.margins.right || 20,
       marginBottom: event.margins.bottom || 20,
-      marginLeft: event.margins.left || 20
+      marginLeft: event.margins.left || 20,
+      headerHtml: '/tmp/header.html',
+      //headerSpacing: 50 //FIXME: Setting this causes the header not to be rendered at the moment
+      footerHtml: '/tmp/footer.html',
     };
-
 
 		wkhtmltopdf(event.html, options, function(code, signal) {
 
@@ -39,6 +50,7 @@ exports.handler = function(event, context) {
 				return_data = {
 					filename : output_filename
 				};
+        console.log(return_data);
 				// context.succeed("File has been uploaded");
 				context.done(null, return_data);
 			});
