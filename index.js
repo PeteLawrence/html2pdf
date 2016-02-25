@@ -7,7 +7,6 @@ var config = require('./config.js');
 process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'];
 
 exports.handler = function(event, context) {
-  console.log(config);
   return_data = {};
   if (event.html) {
     var output_filename = 'report_' + Math.random().toString(36).slice(2) + '.pdf';
@@ -17,21 +16,22 @@ exports.handler = function(event, context) {
 
 
     //Write the header to a file for wkhtmltopdf to use
-    var headerHtml = "<body style='height:50px;overflow:hidden;margin:0;padding:0;'>" + event.header.html + "</body>";
+    var headerHtml = "<body style='overflow:hidden;margin:0;padding:0;background-color:#c66'>" + event.header.html + "</body>";
     fs.writeFile('/tmp/header.html', "<!DOCTYPE html>\n" + headerHtml);
 
     //Write the footer to a file for wkhtmltopdf to use
-    var footerHtml = "<body style='height:50px;overflow:hidden;margin:0;padding:0;'>" + event.footer.html + "</body>";
+    var footerHtml = "<body style='overflow:hidden;margin:0;padding:0;background-color:#66c'>" + event.footer.html + "</body>";
     fs.writeFile('/tmp/footer.html', "<!DOCTYPE html>\n" + footerHtml);
 
     var options = {
-      marginTop: event.margins.top || 20,
-      marginRight: event.margins.right || 20,
-      marginBottom: event.margins.bottom || 20,
-      marginLeft: event.margins.left || 20,
+      marginTop: event.margins.top || 30,
+      marginRight: event.margins.right || 10,
+      marginBottom: event.margins.bottom || 10,
+      marginLeft: event.margins.left || 10,
       headerHtml: '/tmp/header.html',
-      //headerSpacing: 50 //FIXME: Setting this causes the header not to be rendered at the moment
+      headerSpacing: event.header.spacing || 0.001,
       footerHtml: '/tmp/footer.html',
+      footerSpacing: event.footer.spacing || 0.001,
     };
 
     wkhtmltopdf(event.html, options, function(code, signal) {

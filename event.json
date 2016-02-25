@@ -1,5 +1,5 @@
 {
-  "html": "<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'><style>body { font-family: 'Lato', sans-serif; }</style><h1>Hello World</h1><p>Nullam quis risus eget urna mollis ornare vel eu leo. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Curabitur blandit tempus porttitor. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>",
+  "html": "<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'><style>body { font-family: 'Lato', sans-serif; margin: 0; padding: 20px 0 0 0 ; }</style><h1>Hello World</h1><p>Nullam quis risus eget urna mollis ornare vel eu leo. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Curabitur blandit tempus porttitor. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>",
   "margins": {
       "top": 20,
       "right": 10,
@@ -7,11 +7,11 @@
       "left": 10
   },
   "header": {
-      "html": "Here is my header that is pretty long",
-      "spacing": 10
+      "html": "<div>Here is a header<br />and smoe more text</div>",
+      "spacing": 0.001
   },
   "footer": {
-      "html": "Here is a footer that will appear on every page",
-      "spacing": 10
+      "html": "<div>Here is a footer that will appear on every page</div>",
+      "spacing": 0.001
   }
 }
