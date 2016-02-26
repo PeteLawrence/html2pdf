@@ -16,11 +16,11 @@ exports.handler = function(event, context) {
 
 
     //Write the header to a file for wkhtmltopdf to use
-    var headerHtml = "<body style='overflow:hidden;margin:0;padding:0;background-color:#c66'>" + event.header.html + "</body>";
+    var headerHtml = "<body style='overflow:hidden;margin:0;padding:0;'>" + event.header.html + "</body>";
     fs.writeFile('/tmp/header.html', "<!DOCTYPE html>\n" + headerHtml);
 
     //Write the footer to a file for wkhtmltopdf to use
-    var footerHtml = "<body style='overflow:hidden;margin:0;padding:0;background-color:#66c'>" + event.footer.html + "</body>";
+    var footerHtml = "<body style='overflow:hidden;margin:0;padding:0;'>" + event.footer.html + "</body>";
     fs.writeFile('/tmp/footer.html', "<!DOCTYPE html>\n" + footerHtml);
 
     var options = {
@@ -32,6 +32,8 @@ exports.handler = function(event, context) {
       headerSpacing: event.header.spacing || 0.001,
       footerHtml: '/tmp/footer.html',
       footerSpacing: event.footer.spacing || 0.001,
+      pageSize: event.pagesize || 'A4',
+      title: event.title || ''
     };
 
     wkhtmltopdf(event.html, options, function(code, signal) {
