@@ -1,0 +1,95 @@
+{
+    "Description": "Generates PDFs from supplied HTML",
+
+    "Parameters": {
+        "MemorySize": {
+            "Description": "The amount of memory to allocate to the function",
+            "Type": "String",
+            "AllowedValues": [ "128", "192", "256", "320", "384", "448", "512", "576", "640", "704", "768", "832", "896", "960", "1024" ],
+            "Default": "128"
+        },
+        "Timeout": {
+            "Description": "The amount of time to allow the function to run for",
+            "Type": "Number",
+            "Default": "10"
+        }
+    },
+
+    "Resources": {
+        "Bucket": {
+            "Type" : "AWS::S3::Bucket",
+            "Properties" : {
+                "BucketName": "csd-html2pdf",
+                "LifecycleConfiguration": {
+                    "Rules": [
+                        {
+                            "ExpirationInDays": 3,
+                            "Status": "Enabled"
+                        }
+                    ]
+                }
+            }
+        },
+
+        "Function": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": "csd-files",
+                    "S3Key": "lambda/html2pdf.zip"
+                },
+                "Description": "Generates PDFs from supplied HTML",
+                "Handler": "index.handler",
+                "MemorySize": { "Ref": "MemorySize" },
+                "Role": {"Fn::GetAtt" : ["IAMRole", "Arn"] },
+                "Runtime": "nodejs4.3",
+                "Timeout": { "Ref": "Timeout" }
+            }
+        },
+
+        "IAMRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version" : "2012-10-17",
+                    "Statement": [ {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [ "lambda.amazonaws.com" ]
+                        },
+                        "Action": [ "sts:AssumeRole" ]
+                    } ]
+                },
+                "Policies": [
+                    {
+                        "PolicyName": "S3-bucket-write",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:PutObject",
+                                        "s3:GetObject"
+                                    ],
+                                    "Resource": [
+                                        { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "Bucket" }, "/*" ] ] }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
