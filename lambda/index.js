@@ -28,15 +28,16 @@ exports.handler = function(event, context, callback) {
   var footerHtml = "<body style='overflow:hidden;margin:0;padding:0;'>" + event.footer.html + "</body>";
   fs.writeFile('/tmp/footer.html', "<!DOCTYPE html>\n" + footerHtml);
 
+  //Build the options for wkhtmltopdf
   var options = {
-    marginTop: event.margins.top || 10,
-    marginRight: event.margins.right || 10,
-    marginBottom: event.margins.bottom || 10,
-    marginLeft: event.margins.left || 10,
+    marginTop: (event.margins && event.margins.top) ? event.margins.top : 10,
+    marginRight: (event.margins && event.margins.right) ? event.margins.right : 10,
+    marginBottom: (event.margins && event.margins.bottom) ? event.margins.bottom : 10,
+    marginLeft: (event.margins && event.margins.left) ? event.margins.left : 10,
     headerHtml: '/tmp/header.html',
-    headerSpacing: event.header.spacing || 0.001,
+    headerSpacing: (event.header && event.header.spacing) ? event.header.spacing : 0.0001,
     footerHtml: '/tmp/footer.html',
-    footerSpacing: event.footer.spacing || 0.001,
+    footerSpacing: (event.footer && event.footer.spacing) ? event.footer.spacing : 0.0001,
     pageSize: event.pagesize || 'A4',
     title: event.title || ''
   };
