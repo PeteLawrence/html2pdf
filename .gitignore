@@ -6,3 +6,7 @@ config.js
 
 node_modules/
 .DS_Store
+
+test/composer.lock
+test/composer.phar
+test/vendor/
