@@ -1,6 +1,7 @@
 # html2pdf
 A Lambda function for generating PDF's from HTML.  A short-lived S3 signed URL will be returned.
 
+
 A Cloudformation template is included that set's up the function, bucket and required roles.  It also sets up a Lifecycle rule to delete old reports from the bucket automatically.
 
 # Usage
