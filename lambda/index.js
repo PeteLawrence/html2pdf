@@ -22,11 +22,15 @@ exports.handler = function(event, context, callback) {
 
   //Write the header to a file for wkhtmltopdf to use
   var headerHtml = "<body style='overflow:hidden;margin:0;padding:0;'>" + event.header.html + "</body>";
-  fs.writeFile('/tmp/header.html', "<!DOCTYPE html>\n" + headerHtml);
+  fs.writeFile('/tmp/header.html', "<!DOCTYPE html>\n" + headerHtml, (err) => {
+    if (err) throw err;
+  });
 
   //Write the footer to a file for wkhtmltopdf to use
   var footerHtml = "<body style='overflow:hidden;margin:0;padding:0;'>" + event.footer.html + "</body>";
-  fs.writeFile('/tmp/footer.html', "<!DOCTYPE html>\n" + footerHtml);
+  fs.writeFile('/tmp/footer.html', "<!DOCTYPE html>\n" + footerHtml, (err) => {
+    if (err) throw err;
+  });
 
   //Build the options for wkhtmltopdf
   var options = {
