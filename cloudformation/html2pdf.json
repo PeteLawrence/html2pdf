@@ -2,6 +2,11 @@
     "Description": "Generates PDFs from supplied HTML",
 
     "Parameters": {
+        "BucketName": {
+            "Description": "The name of the S3 bucket that will contain the generated PDFs",
+            "Type": "String",
+            "Default": "csd-html2pdf"
+        },
         "MemorySize": {
             "Description": "The amount of memory to allocate to the function",
             "Type": "String",
@@ -19,7 +24,7 @@
         "Bucket": {
             "Type" : "AWS::S3::Bucket",
             "Properties" : {
-                "BucketName": "csd-html2pdf",
+                "BucketName": { "Ref": "BucketName" },
                 "LifecycleConfiguration": {
                     "Rules": [
                         {
@@ -39,6 +44,11 @@
                     "S3Key": "lambda/html2pdf.zip"
                 },
                 "Description": "Generates PDFs from supplied HTML",
+                "Environment": {
+                    "Variables": {
+                        "BUCKET_NAME": { "Ref": "BucketName" }
+                    }
+                },
                 "Handler": "index.handler",
                 "MemorySize": { "Ref": "MemorySize" },
                 "Role": {"Fn::GetAtt" : ["IAMRole", "Arn"] },

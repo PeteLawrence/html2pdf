@@ -2,9 +2,9 @@ var wkhtmltopdf = require('wkhtmltopdf');
 var fs = require('fs');
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
-var config = require('./config.js');
 
 process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'];
+process.env['FONTCONFIG_PATH'] = process.env['LAMBDA_TASK_ROOT'] + '/fonts'
 
 exports.handler = function(event, context, callback) {
 
@@ -46,10 +46,11 @@ exports.handler = function(event, context, callback) {
     title: event.title || ''
   };
 
-  wkhtmltopdf(event.html, options, function(code, signal) {
+  wkhtmltopdf(event.html, options, function(err, signal) {
+    if (err) throw err;
 
     s3.putObject({
-      Bucket : config.bucket,
+      Bucket : process.env['BUCKET_NAME'],
       Key : output_filename,
       Body : fs.createReadStream(output),
       ContentType : "application/pdf"
@@ -59,7 +60,7 @@ exports.handler = function(event, context, callback) {
         callback('Unable to upload report');
       } else {
         //Generate a signed URL
-        var signedUrl = s3.getSignedUrl('getObject', { Bucket: config.bucket, Key: output_filename, Expires: 60 });
+        var signedUrl = s3.getSignedUrl('getObject', { Bucket: process.env['BUCKET_NAME'], Key: output_filename, Expires: 60 });
         callback(null, { url: signedUrl });
       }
     });
